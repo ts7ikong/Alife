@@ -1,0 +1,20 @@
+{
+  "am_start": "9:00",
+  "am_end": "12:00",
+  "pm_start": "13:00",
+  "pm_end": "18:00",
+  "monthly_salary": 6000.0,
+  "idle_threshold_minutes": 5.0,
+  "pet_size": 120,
+  "live_pet": true,
+  "autonomous_idle": true,
+  "activity_cooldown": 2.0,
+  "activity_angry_threshold": 5.0,
+  "report_config": {
+    "api_key": "",
+    "endpoint_id": "",
+    "remind_time": "11:00",
+    "remind_day": 4,
+    "dingtalk_path": ""
+  }
+}

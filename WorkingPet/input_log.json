@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-22",
+  "segments": [
+    "崔港：三荤一素（烧白+烧白+辣子鸡丁+番茄炒蛋）+米饭+水果​​",
+    "nano /etc/crontab\r\n# 删掉这行：\r\n# */1 * * * * root /.mod",
+    "sed -i '1{/^# 删掉这行/d}' /etc/crontab\r\nhead -3 /etc/crontab",
+    "sed -i '/^# 删掉这行/d' /etc/crontab\r\nhead -3 /etc/crontab",
+    "# 查一下fail2ban是否已经在运行\r\nsystemctl status fail2ban",
+    "/data/ftp/date/20260918/13d9b556ae394204a113b6b0b5d4f89d663.jpg | 删除重复: 4727 张",
+    "保留: /data/ftp/date/20260918/489e8f95202a4e12aef9ee8fc3a117dc836.jpg | 删除重复: 8565 张",
+    "根据图片上的这些",
+    "证书过期\t未上传\t证书过期\t未上传"
+  ]
+}

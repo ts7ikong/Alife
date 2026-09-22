@@ -1,0 +1,19 @@
+{
+  "am_start": "10:00",
+  "am_end": "12:00",
+  "pm_start": "14:00",
+  "pm_end": "18:30",
+  "monthly_salary": 12000.0,
+  "idle_threshold_minutes": 5.0,
+  "pet_size": 350,
+  "activity_cooldown": 2.0,
+  "activity_angry_threshold": 60.0,
+  "report_config": {
+    "api_key": "251a4479aeeb44328cd36befb8123873.nRhTqOd7jRdm8x1M",
+    "endpoint_id": "glm-4-flash",
+    "api_url": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    "remind_time": "11:00",
+    "remind_day": 4,
+    "dingtalk_path": "C:\\sofe\\DingDing\\DingtalkLauncher.exe"
+  }
+}
