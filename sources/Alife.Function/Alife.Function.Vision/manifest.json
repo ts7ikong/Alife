@@ -7,8 +7,7 @@
   "Environments": {
     "nuget": {
       "System.Drawing.Common": ">=9.0.0",
-      "Vortice.Direct3D11": ">=3.8.1",
-      "Microsoft.Windows.SDK.NET.Ref": ""
+      "Vortice.Direct3D11": ">=3.8.1"
     }
   }
 }
