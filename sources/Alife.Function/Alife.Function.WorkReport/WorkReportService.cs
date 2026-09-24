@@ -184,6 +184,8 @@ public class WorkReportService(
                 }
             }, url);
 
+            calendarWindow.OnClosed += () => calendarWindow = null;
+
             TaskCompletionSource tcs = new();
             calendarWindow.OnReadyToShow += () => tcs.TrySetResult();
             await Task.WhenAny(tcs.Task, Task.Delay(5000));
