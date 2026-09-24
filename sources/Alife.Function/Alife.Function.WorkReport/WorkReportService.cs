@@ -183,7 +183,7 @@ public class WorkReportService(
             }
         }
 
-        string prompt = $"请根据以下本周工作数据生成周报（{weekStart} - {weekEnd}）：\n\n{dataBlock.ToString().TrimEnd()}\n\n周报格式：\n标题：周报（{weekStart} - {weekEnd}）\n开头：本周共完成X项工作，主要涉及[不超过4个关键词]等方面。\n分项用\"-\"开头，格式：[小结词]：[内容]\n语言平实，不加修饰词。下周计划若无则写"暂无具体安排"。\n只输出周报正文，不加任何解释。";
+        string prompt = $"请根据以下本周工作数据生成周报（{weekStart} - {weekEnd}）：\n\n{dataBlock.ToString().TrimEnd()}\n\n周报格式：\n标题：周报（{weekStart} - {weekEnd}）\n开头：本周共完成X项工作，主要涉及[不超过4个关键词]等方面。\n分项用\"-\"开头，格式：[小结词]：[内容]\n语言平实，不加修饰词。下周计划若无则写\"暂无具体安排\"。\n只输出周报正文，不加任何解释。";
 
         interactor.Poke(prompt);
     }
