@@ -3,4 +3,7 @@
     <ProjectReference Include="..\..\Alife\Alife.Framework\Alife.Framework.csproj" />
     <ProjectReference Include="..\Alife.Function.FunctionCaller\Alife.Function.FunctionCaller.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ElectronNET.Core.API" Version="0.5.2" />
+  </ItemGroup>
 </Project>
