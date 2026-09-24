@@ -40,7 +40,6 @@ public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
             Frame = false,
             Transparent = true,
             HasShadow = false,
-            Show = false,
             Resizable = false,
             Fullscreenable = false,
             BackgroundColor = "#00000000",
@@ -52,13 +51,8 @@ public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
             }
         }, url);
 
-        TaskCompletionSource tcs = new();
-        window.OnReadyToShow += () => {
-            window.SetAlwaysOnTop(true, (OnTopLevel)7, 1);
-            window.Show();
-            tcs.SetResult();
-        };
-        await tcs.Task;
+        window.SetAlwaysOnTop(true, (OnTopLevel)7, 1);
+        window.Show();
     }
 
     protected override Task OnDestroy()
