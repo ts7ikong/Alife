@@ -25,7 +25,8 @@ public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
     protected override async Task OnAwake()
     {
         // 在所有模块构造完成后再查找 IDeskPet，避免构造顺序依赖
-        deskPet = ChatActivity.Container.Instances.OfType<IDeskPet>().FirstOrDefault();
+        foreach (object inst in ChatActivity.Container.Instances)
+            if (inst is IDeskPet pet) { deskPet = pet; break; }
         string htmlDir = Path.Combine(AlifePath.RuntimeFolderPath, "WorkKanban");
         Directory.CreateDirectory(htmlDir);
 
