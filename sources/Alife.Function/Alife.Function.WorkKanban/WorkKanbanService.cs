@@ -40,16 +40,22 @@ public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
             Frame = false,
             Transparent = true,
             HasShadow = false,
+            Show = false,
             Resizable = false,
             Fullscreenable = false,
             BackgroundColor = "#00000000",
             Movable = true,
             WebPreferences = new WebPreferences {
-                NodeIntegration = false,
+                NodeIntegration = true,
                 ContextIsolation = false,
                 Sandbox = false,
             }
         }, url);
+
+        // 订阅后等待页面就绪；若 OnReadyToShow 已在订阅前触发则 1 秒超时兜底
+        TaskCompletionSource tcs = new();
+        window.OnReadyToShow += () => tcs.TrySetResult();
+        await Task.WhenAny(tcs.Task, Task.Delay(1000));
 
         window.SetAlwaysOnTop(true, (OnTopLevel)7, 1);
         window.Show();
