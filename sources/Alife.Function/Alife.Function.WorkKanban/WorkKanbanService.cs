@@ -12,18 +12,20 @@ namespace Alife.Function.WorkKanban;
 
 [Module("工作看板",
     "在桌宠上方（或屏幕右上角）显示当前时间、已工作时长和距下班时间的悬浮面板。",
-    launchOrder: 50,
     defaultCategory: "个人定制")]
-public class WorkKanbanService(IDeskPet? deskPet = null) : ChatBehaviour, IConfigurable<WorkKanbanConfig>
+public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
 {
     public WorkKanbanConfig Configuration { get; set; } = null!;
 
     BrowserWindow? window;
+    IDeskPet? deskPet;
     readonly int w = 366, h = 190;
     float dpi = 1f;
 
     protected override async Task OnAwake()
     {
+        // 在所有模块构造完成后再查找 IDeskPet，避免构造顺序依赖
+        deskPet = ChatActivity.Container.Instances.OfType<IDeskPet>().FirstOrDefault();
         string htmlDir = Path.Combine(AlifePath.RuntimeFolderPath, "WorkKanban");
         Directory.CreateDirectory(htmlDir);
 
