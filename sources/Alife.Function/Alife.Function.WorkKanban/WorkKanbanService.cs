@@ -12,6 +12,7 @@ namespace Alife.Function.WorkKanban;
 
 [Module("工作看板",
     "在桌宠上方（或屏幕右上角）显示当前时间、已工作时长和距下班时间的悬浮面板。",
+    launchOrder: 50,
     defaultCategory: "个人定制")]
 public class WorkKanbanService(IDeskPet? deskPet = null) : ChatBehaviour, IConfigurable<WorkKanbanConfig>
 {
