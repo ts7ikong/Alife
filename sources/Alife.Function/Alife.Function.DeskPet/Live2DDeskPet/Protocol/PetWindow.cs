@@ -36,6 +36,11 @@ public sealed class PetWindow(StorageSystem storage, PetStorageKey storageKey) :
         window.SetBounds(defaultBounds);
     }
 
+    public void PersistBounds()
+    {
+        storage.SetObject(windowBoundsKey, bounds);
+    }
+
     BrowserWindow window = null!;
     double dpi;
     Rectangle bounds = null!;
