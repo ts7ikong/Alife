@@ -18,7 +18,7 @@ public class WorkKanbanService(IDeskPet? deskPet = null) : ChatBehaviour, IConfi
     public WorkKanbanConfig Configuration { get; set; } = null!;
 
     BrowserWindow? window;
-    readonly int w = 215, h = 110;
+    readonly int w = 380, h = 178;
     float dpi = 1f;
 
     protected override async Task OnAwake()
@@ -115,71 +115,76 @@ public class WorkKanbanService(IDeskPet? deskPet = null) : ChatBehaviour, IConfi
                 font-family:'Microsoft YaHei','Segoe UI',sans-serif;
                 user-select:none;
                 -webkit-app-region:drag;
+                display:flex; align-items:center; justify-content:center;
             }
             .panel {
-                margin:6px;
-                padding:10px 14px;
-                background:rgba(15,15,20,0.82);
-                backdrop-filter:blur(16px);
-                border-radius:14px;
-                border:1px solid rgba(255,255,255,0.08);
+                width:calc(100% - 12px);
+                padding:14px 20px 14px;
+                background:linear-gradient(150deg, rgba(6,16,48,0.97) 0%, rgba(3,10,32,0.97) 100%);
+                border-radius:18px;
+                border:1.5px solid rgba(56,182,255,0.55);
+                box-shadow:0 0 22px rgba(56,182,255,0.22), inset 0 0 18px rgba(56,182,255,0.04);
                 color:white;
+                display:flex; flex-direction:column; align-items:center; gap:8px;
             }
-            .time { font-size:26px; font-weight:700; letter-spacing:2px; font-variant-numeric:tabular-nums; }
-            .date { font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px; }
-            .row { margin-top:5px; font-size:12px; display:flex; align-items:center; gap:6px; }
-            .tag { padding:2px 7px; border-radius:10px; font-size:10px; font-weight:600; }
-            .work-tag { background:rgba(74,222,128,0.2); color:#4ade80; }
-            .off-tag  { background:rgba(251,146,60,0.2);  color:#fb923c; }
-            .val { font-variant-numeric:tabular-nums; }
+            .time {
+                font-size:46px; font-weight:800; letter-spacing:4px;
+                font-variant-numeric:tabular-nums;
+                color:#38b6ff;
+                text-shadow:0 0 18px rgba(56,182,255,0.9), 0 0 36px rgba(56,182,255,0.45);
+                line-height:1;
+            }
+            .pill {
+                width:100%; border-radius:22px; padding:6px 16px;
+                background:rgba(14,32,72,0.85);
+                border:1px solid rgba(56,182,255,0.18);
+                font-size:14px; display:flex; align-items:center; justify-content:center; gap:7px;
+            }
+            .info-row { gap:10px; }
+            .sep { color:rgba(255,255,255,0.2); font-size:16px; }
             </style>
             </head>
             <body>
             <div class="panel">
-                <div class="time" id="T">--:--</div>
-                <div class="date" id="D">--</div>
-                <div class="row" id="R1" style="display:none">
-                    <span class="tag work-tag">工作中</span>
-                    <span class="val" id="worked">--</span>
-                </div>
-                <div class="row" id="R2" style="display:none">
-                    <span style="color:rgba(255,255,255,0.45)">距下班</span>
-                    <span class="val" id="cd">--</span>
-                </div>
-                <div class="row" id="R3" style="display:none">
-                    <span class="tag off-tag">已下班</span>
-                    <span class="val" id="tot">--</span>
+                <div class="time" id="T">--:--:--</div>
+                <div class="pill" id="SP">💻 正常工作中...</div>
+                <div class="pill info-row" id="IR" style="display:none">
+                    <span>⏰</span><span id="worked">--</span>
+                    <span class="sep">·</span>
+                    <span>🏃</span><span id="cd">--</span>
                 </div>
             </div>
             <script>
             const SCH = '__SCHEDULE__';
-            const WD = ['日','一','二','三','四','五','六'];
             function toMin(t){ const p=t.split(':'); return parseInt(p[0])*60+parseInt(p[1]); }
             function parseSch(s){ return s.split(',').map(seg=>{ const p=seg.trim().split('-'); return [toMin(p[0]),toMin(p[1])]; }); }
             function pad(n){ return String(n).padStart(2,'0'); }
-            function fmt(m){ const h=Math.floor(m/60),n=m%60; return h>0?h+'h '+pad(n)+'m':n+'m'; }
+            function fmtHM(m){ const h=Math.floor(m/60),n=m%60; return h>0?h+'h '+n+'m':n+'m'; }
             const ranges=parseSch(SCH);
             const dayStart=ranges[0][0], dayEnd=ranges[ranges.length-1][1];
             function update(){
                 const now=new Date();
                 const cur=now.getHours()*60+now.getMinutes();
-                document.getElementById('T').textContent=pad(now.getHours())+':'+pad(now.getMinutes());
-                document.getElementById('D').textContent=(now.getMonth()+1)+'月'+now.getDate()+'日 周'+WD[now.getDay()];
+                document.getElementById('T').textContent=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
                 let inWork=false,curEnd=null;
                 for(const [s,e] of ranges){ if(cur>=s&&cur<e){ inWork=true;curEnd=e;break; } }
-                const r1=document.getElementById('R1'),r2=document.getElementById('R2'),r3=document.getElementById('R3');
+                const sp=document.getElementById('SP'), ir=document.getElementById('IR');
                 if(inWork){
-                    r1.style.display=r2.style.display='flex'; r3.style.display='none';
-                    document.getElementById('worked').textContent=fmt(cur-dayStart);
-                    document.getElementById('cd').textContent=fmt(curEnd-cur);
+                    sp.innerHTML='💻 正常工作中...';
+                    ir.style.display='flex';
+                    document.getElementById('worked').textContent=fmtHM(cur-dayStart);
+                    document.getElementById('cd').textContent=fmtHM(curEnd-cur)+' 后下班';
                 } else if(cur>=dayEnd){
-                    r1.style.display=r2.style.display='none'; r3.style.display='flex';
-                    document.getElementById('tot').textContent='已工作 '+fmt(dayEnd-dayStart);
+                    sp.innerHTML='🎉 已下班！';
+                    ir.style.display='flex';
+                    document.getElementById('worked').textContent='今日 '+fmtHM(dayEnd-dayStart);
+                    document.getElementById('cd').textContent='收工啦';
                 } else {
-                    r1.style.display=r2.style.display=r3.style.display='none';
+                    sp.innerHTML='☕ 工作未开始';
+                    ir.style.display='none';
                 }
             }
-            setInterval(update,5000); update();
+            setInterval(update,1000); update();
             </script>
             </body>
             </html>
