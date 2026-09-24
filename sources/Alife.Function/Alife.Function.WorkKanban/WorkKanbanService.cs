@@ -81,7 +81,6 @@ public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
     protected override async Task OnUpdate()
     {
         if (deskPet == null || window == null) return;
-        if (UpdateContext.FrameCount % 3 != 0) return; // 每 ~0.9s 更新一次位置
 
         Vector2 petPos = await deskPet.GetPosition();
         (int newX, int newY) = CalcPosition(petPos);
