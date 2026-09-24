@@ -18,4 +18,6 @@ public interface IDeskPet
     public Task ShowMotion(string? motion);
     public Task<Vector2> GetPosition();
     public Task Move(Vector2 offset, float seconds);
+    public Task Resize(int width, int height);
+    public Task MoveToCenter();
 }

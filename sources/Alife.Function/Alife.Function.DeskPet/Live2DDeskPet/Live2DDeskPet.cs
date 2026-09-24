@@ -103,6 +103,23 @@ public partial class Live2DDeskPet(
 
         return Task.FromResult(position);
     }
+    public Task Resize(int width, int height)
+    {
+        Rectangle bounds = window.Bounds;
+        bounds.Width = width;
+        bounds.Height = height;
+        window.Window.SetBounds(bounds);
+        return Task.CompletedTask;
+    }
+    public async Task MoveToCenter()
+    {
+        ElectronNET.API.Entities.Display primary = await ElectronNET.API.Electron.Screen.GetPrimaryDisplayAsync();
+        Rectangle bounds = window.Bounds;
+        int targetX = primary.WorkArea.X + (primary.WorkArea.Width - bounds.Width) / 2;
+        int targetY = primary.WorkArea.Y + (primary.WorkArea.Height - bounds.Height) / 2;
+        float dpi = (float)window.Dpi;
+        await Move(new Vector2((targetX - bounds.X) * dpi, (targetY - bounds.Y) * dpi), 0.8f);
+    }
     public async Task Move(Vector2 offset, float seconds)
     {
         float dpi = (float)window.Dpi;

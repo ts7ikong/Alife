@@ -1,0 +1,9 @@
+{
+  "Version": "1.0.0",
+  "Dependencies": {},
+  "Environments": {
+    "nuget": {
+      "ElectronNET.Core.API": "0.5.2"
+    }
+  }
+}
