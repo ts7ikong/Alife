@@ -1,21 +1,25 @@
 using System;
 using System.IO;
+using System.Numerics;
 using System.Threading.Tasks;
 using Alife.Foundation;
 using Alife.Framework;
+using Alife.Function.DeskPet;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 
 namespace Alife.Function.WorkKanban;
 
 [Module("工作看板",
-    "在屏幕右上角显示当前时间、已工作时长和距下班时间的悬浮面板。",
+    "在桌宠上方（或屏幕右上角）显示当前时间、已工作时长和距下班时间的悬浮面板。",
     defaultCategory: "个人定制")]
-public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
+public class WorkKanbanService(IDeskPet? deskPet = null) : ChatBehaviour, IConfigurable<WorkKanbanConfig>
 {
     public WorkKanbanConfig Configuration { get; set; } = null!;
 
     BrowserWindow? window;
+    readonly int w = 215, h = 110;
+    float dpi = 1f;
 
     protected override async Task OnAwake()
     {
@@ -28,9 +32,19 @@ public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
         string url = new Uri(htmlPath).AbsoluteUri;
 
         Display primary = await Electron.Screen.GetPrimaryDisplayAsync();
-        int w = 215, h = 110;
-        int x = primary.WorkArea.X + primary.WorkArea.Width - w - 10;
-        int y = primary.WorkArea.Y + 10;
+        dpi = (float)primary.ScaleFactor;
+
+        int x, y;
+        if (deskPet != null)
+        {
+            Vector2 petPos = await deskPet.GetPosition();
+            (x, y) = CalcPosition(petPos);
+        }
+        else
+        {
+            x = primary.WorkArea.X + primary.WorkArea.Width - w - 10;
+            y = primary.WorkArea.Y + 10;
+        }
 
         window = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions {
             Title = "工作看板",
@@ -52,7 +66,6 @@ public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
             }
         }, url);
 
-        // 订阅后等待页面就绪；若 OnReadyToShow 已在订阅前触发则 1 秒超时兜底
         TaskCompletionSource tcs = new();
         window.OnReadyToShow += () => tcs.TrySetResult();
         await Task.WhenAny(tcs.Task, Task.Delay(1000));
@@ -61,11 +74,30 @@ public class WorkKanbanService : ChatBehaviour, IConfigurable<WorkKanbanConfig>
         window.Show();
     }
 
+    protected override async Task OnUpdate()
+    {
+        if (deskPet == null || window == null) return;
+        if (UpdateContext.FrameCount % 3 != 0) return; // 每 ~0.9s 更新一次位置
+
+        Vector2 petPos = await deskPet.GetPosition();
+        (int newX, int newY) = CalcPosition(petPos);
+        window.SetBounds(new Rectangle { X = newX, Y = newY, Width = w, Height = h });
+    }
+
     protected override Task OnDestroy()
     {
         try { window?.Destroy(); } catch { }
         window = null;
         return Task.CompletedTask;
+    }
+
+    // petPos 是 DPI 缩放后的物理像素中心坐标，转回逻辑像素后贴在桌宠正上方
+    (int x, int y) CalcPosition(Vector2 petPos)
+    {
+        int petCenterX = (int)(petPos.X / dpi);
+        int petCenterY = (int)(petPos.Y / dpi);
+        // 250 ≈ 桌宠高度一半（默认 480px），10 为间距
+        return (petCenterX - w / 2, petCenterY - 250 - h - 10);
     }
 
     static string BuildHtml(string workSchedule)
