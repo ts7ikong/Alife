@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Alife.Framework;
+using Alife.Function.DeskPet;
 using Alife.Function.FunctionCaller;
 using Alife.Function.MessageFilter;
 
@@ -16,7 +17,8 @@ namespace Alife.Function.PersonalContext;
 public class PersonalContextService(
     XmlFunctionCaller functionCaller,
     MessageFilterService messageFilterService,
-    Interactor<PersonalContextService> interactor) :
+    Interactor<PersonalContextService> interactor,
+    IDeskPet? deskPet = null) :
     ChatBehaviour,
     IConfigurable<PersonalContextConfig>
 {
@@ -46,6 +48,10 @@ public class PersonalContextService(
 
         // 周期性注入当前情境摘要（跟随 MessageFilter 的 InjectionInterval 节奏）
         messageFilterService.AddMessageReplyGuidance(BuildContextGuidance, DestroyCancellationToken);
+
+        // 启动下班提醒监控
+        if (!string.IsNullOrEmpty(Configuration.WorkSchedule))
+            _ = OffWorkMonitorLoop();
 
         return Task.CompletedTask;
     }
@@ -180,6 +186,36 @@ public class PersonalContextService(
             return "";
 
         return $"[用户当前情境]\n{sb.ToString().TrimEnd()}";
+    }
+
+    async Task OffWorkMonitorLoop()
+    {
+        bool wasWorkTime = IsWorkTime();
+        using PeriodicTimer timer = new(TimeSpan.FromMinutes(1));
+        try
+        {
+            while (await timer.WaitForNextTickAsync(DestroyCancellationToken))
+            {
+                bool isWork = IsWorkTime();
+                if (wasWorkTime && !isWork)
+                    await TriggerOffWorkReminder();
+                wasWorkTime = isWork;
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception e) { AlifeLog.LogError(e); }
+    }
+
+    async Task TriggerOffWorkReminder()
+    {
+        interactor.Poke("下班时间到了！今天辛苦了，记得好好休息 🎉");
+        if (deskPet == null) return;
+        try
+        {
+            await deskPet.Resize(480, 720);
+            await deskPet.MoveToCenter();
+        }
+        catch (Exception e) { AlifeLog.LogWarning(e); }
     }
 
     // 判断当前是否在工作时间

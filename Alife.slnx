@@ -39,6 +39,7 @@
     <Project Path="Sources/Alife/Alife.PluginMarket/Alife.PluginMarket.csproj" />
   </Folder>
   <Folder Name="/Sources/Alife.Function/Environment/">
+    <Project Path="Sources/Alife.Function/Alife.Function.WorkKanban/Alife.Function.WorkKanban.csproj" />
     <Project Path="Sources/Alife.Function/Alife.Function.Memory/Alife.Function.Memory.csproj" />
     <Project Path="Sources/Alife.Function/Alife.Function.MessageFilter/Alife.Function.MessageFilter.csproj" />
     <Project Path="Sources/Alife.Function/Alife.Function.Developer/Alife.Function.Developer.csproj" />

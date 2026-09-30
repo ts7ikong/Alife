@@ -42,6 +42,7 @@ body:hover #resize-btn { opacity:1; }
     });
     btn.addEventListener('pointerup', function(e) {
         btn.releasePointerCapture(e.pointerId);
+        postMessage({type:'resize_end'});
     });
 })();
 ";
@@ -78,6 +79,10 @@ body:hover #resize-btn { opacity:1; }
                     startBounds.Height = Math.Max(startBounds.Height, MinSize);
                     window.Window.SetBounds(startBounds);
                 }
+                break;
+            case "resize_end":
+                window.PersistBounds();
+                startBounds = null;
                 break;
         }
     }
