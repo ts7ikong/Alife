@@ -23,6 +23,11 @@ public class PersonalContextConfig
     public bool InjectScreenContext { get; set; } = true;
 
     /// <summary>
+    /// 是否在情境摘要中注入今日应用使用时长和最近中文输入（数据由「行为采集」模块产生）
+    /// </summary>
+    public bool InjectBehavior { get; set; } = true;
+
+    /// <summary>
     /// 屏幕活动取最近N条记录
     /// </summary>
     public int ScreenContextCount { get; set; } = 5;

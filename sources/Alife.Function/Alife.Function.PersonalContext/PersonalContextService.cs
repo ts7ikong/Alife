@@ -182,6 +182,26 @@ public class PersonalContextService(
             }
         }
 
+        // 今日应用使用时长与最近中文输入
+        if (Configuration.InjectBehavior)
+        {
+            string today = DateTime.Now.ToString("yyyy-MM-dd");
+            if (reader.ReadRawBehavior().TryGetValue(today, out var behavior) && behavior.Apps.Count > 0)
+            {
+                sb.AppendLine("今日应用使用时长（前5）：");
+                foreach (var app in behavior.Apps.OrderByDescending(pair => pair.Value).Take(5))
+                    sb.AppendLine($"  {app.Key}  {Math.Max(1, app.Value / 60)} 分钟");
+                hasContent = true;
+            }
+
+            var inputLog = reader.ReadInputLog();
+            if (inputLog.Date == today && inputLog.Segments.Count > 0)
+            {
+                sb.AppendLine($"最近中文输入：{string.Join(" / ", inputLog.Segments.TakeLast(3))}");
+                hasContent = true;
+            }
+        }
+
         if (!hasContent)
             return "";
 

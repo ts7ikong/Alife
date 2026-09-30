@@ -37,6 +37,12 @@ public class ActivityLog
     [JsonPropertyName("entries")] public List<ActivityEntry> Entries { get; set; } = [];
 }
 
+public class InputLog
+{
+    [JsonPropertyName("date")] public string Date { get; set; } = "";
+    [JsonPropertyName("segments")] public List<string> Segments { get; set; } = [];
+}
+
 public class DayBehavior
 {
     [JsonPropertyName("apps")] public Dictionary<string, int> Apps { get; set; } = [];
@@ -69,6 +75,11 @@ public class WorkingPetReader(string dataPath)
     public ActivityLog ReadActivityLog()
     {
         return Read<ActivityLog>("activity_log.json") ?? new();
+    }
+
+    public InputLog ReadInputLog()
+    {
+        return Read<InputLog>("input_log.json") ?? new();
     }
 
     public Dictionary<string, DayBehavior> ReadRawBehavior()

@@ -12,4 +12,8 @@ public class WorkReportConfig
     public bool AutoDailyReport { get; set; } = true;
     /// <summary>是否启用每周自动周报</summary>
     public bool AutoWeeklyReport { get; set; } = true;
+    /// <summary>生成日报时，是否附上「行为采集」模块采集的活动记录作为辅助参考</summary>
+    public bool IncludeBehaviorInDailyReport { get; set; } = true;
+    /// <summary>行为采集数据目录，留空使用 存储目录/WorkingPet（与「行为采集」默认值一致）</summary>
+    public string BehaviorDataPath { get; set; } = "";
 }

@@ -46,6 +46,8 @@
     <Project Path="Sources/Alife.Function/Alife.Function.SystemEvent/Alife.Function.SystemEvent.csproj" />
     <Project Path="Sources/Alife.Function/Alife.Function.VirtualWorld/Alife.Function.VirtualWorld.csproj" />
     <Project Path="Sources/Alife.Function/Alife.Function.PersonalContext/Alife.Function.PersonalContext.csproj" />
+    <Project Path="Sources/Alife.Function/Alife.Function.BehaviorCollector/Alife.Function.BehaviorCollector.csproj" />
+    <Project Path="Sources/Alife.Function/Alife.Function.PetActivity/Alife.Function.PetActivity.csproj" />
   </Folder>
   <Folder Name="/Sources/Alife.Function/Infrastructure/">
     <Project Path="Sources/Alife.Function/Alife.Function.FunctionCaller/Alife.Function.FunctionCaller.csproj" />

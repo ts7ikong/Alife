@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ElectronNET.Core.API" Version="0.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Alife\Alife.Framework\Alife.Framework.csproj" />
+    <ProjectReference Include="..\Alife.Function.FunctionCaller\Alife.Function.FunctionCaller.csproj" />
+    <ProjectReference Include="..\Alife.Function.MessageFilter\Alife.Function.MessageFilter.csproj" />
+    <ProjectReference Include="..\Alife.Function.DeskPet\Alife.Function.DeskPet.csproj" />
+    <ProjectReference Include="..\Alife.Function.WorkReport\Alife.Function.WorkReport.csproj" />
+    <ProjectReference Include="..\Alife.Function.BehaviorCollector\Alife.Function.BehaviorCollector.csproj" />
+  </ItemGroup>
+
+</Project>

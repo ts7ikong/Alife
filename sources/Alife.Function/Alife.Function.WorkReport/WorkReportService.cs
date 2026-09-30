@@ -215,7 +215,18 @@ public class WorkReportService(
             logsText = sb.ToString().TrimEnd();
         }
 
-        string prompt = $"现在是 {date} 下班时间，请根据以下今日工作记录整理日报：\n\n{logsText}\n\n日报格式要求：\n- 每条工作用\"-\"开头，格式：动词 + 具体内容，语言简洁准确\n- 合并同类项，去除重复，最多8条\n- 如无工作记录，只输出\"（今日暂无工作记录）\"\n- 只输出工作条目，不加标题、日期说明或其他解释";
+        string reference = "";
+        if (Configuration.IncludeBehaviorInDailyReport)
+        {
+            string dataPath = string.IsNullOrWhiteSpace(Configuration.BehaviorDataPath)
+                ? Path.Combine(AlifePath.StorageFolderPath, "WorkingPet")
+                : Configuration.BehaviorDataPath;
+            string snapshot = BehaviorSnapshot.BuildDailyReference(dataPath);
+            if (snapshot.Length > 0)
+                reference = $"\n\n以下是电脑自动采集的辅助参考，仅用于补充遗漏，不确定是工作的内容不要写进日报：\n{snapshot}";
+        }
+
+        string prompt = $"现在是 {date} 下班时间，请根据以下今日工作记录整理日报：\n\n{logsText}{reference}\n\n日报格式要求：\n- 每条工作用\"-\"开头，格式：动词 + 具体内容，语言简洁准确\n- 合并同类项，去除重复，最多8条\n- 如无工作记录，只输出\"（今日暂无工作记录）\"\n- 只输出工作条目，不加标题、日期说明或其他解释";
 
         interactor.Poke(prompt);
     }
@@ -254,6 +265,9 @@ public class WorkReportService(
 
         interactor.Poke(prompt);
     }
+
+    /// <summary>今日已记录的工作条数</summary>
+    public int GetTodayEntryCount() => GetTodayEntries().Count;
 
     List<WorkEntry> GetTodayEntries()
     {
